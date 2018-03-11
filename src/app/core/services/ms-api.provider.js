@@ -202,6 +202,7 @@
 
                 // Create a new deferred object
                 var deferred = $q.defer();
+                console.log('api', api)
 
                 // Get the correct resource definition from api object
                 var apiObject = api[resource];

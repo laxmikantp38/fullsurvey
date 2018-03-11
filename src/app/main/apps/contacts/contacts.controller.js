@@ -9,7 +9,7 @@
         
 
     /** @ngInject */
-    function ContactsController($scope, $mdSidenav, Contacts, User, msUtils, $mdDialog, $document)
+    function ContactsController($scope, $mdSidenav, Contacts, User, msUtils, msApi, $mdDialog, $document)
     {
 
         var vm = this;
@@ -39,6 +39,20 @@
         vm.toggleSidenav = toggleSidenav;
         vm.toggleInArray = msUtils.toggleInArray;
         vm.exists = msUtils.exists;
+        
+        
+        msApi.request('getcontacts@get', {id: 1},
+  
+          // SUCCESS
+          function (response) {
+              console.log(response.data)
+          },
+  
+          // ERROR
+          function (response) {
+              console.error(response.data)
+          }
+      );
 		
 
         //////////

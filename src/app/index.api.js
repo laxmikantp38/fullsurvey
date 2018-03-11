@@ -179,6 +179,12 @@
 
         // Base Url
         api.baseUrl = 'app/data/';
+        
+        api.dashboard = {
+         project  : $resource(api.baseUrl + 'dashboard/project/data.json'),
+         server   : $resource(api.baseUrl + 'dashboard/server/data.json'),
+         analytics: $resource(api.baseUrl + 'dashboard/analytics/data.json')
+         };
 
         /**
          * Here you can find all the definitions that the Demo Project requires
