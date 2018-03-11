@@ -10,8 +10,6 @@ class LabelController {
 	    $this->model = new LabelModel();
 	    header('Access-Control-Allow-Origin: *'); 
 	    header('Access-Control-Allow-Headers: *');
-	    $postdata = file_get_contents("php://input");
-	    $_POST = (array)json_decode($postdata);
 	}
   
   public function get(){
@@ -30,7 +28,7 @@ class LabelController {
   }
   
   public function post(){
-    if(isset($_POST['name']) && !empty($_POST['name']) && isset($_POST['color']) && !empty($_POST['color'])){
+    if(isset($_POST['name']) && !empty($_POST['name'])){
         
         $inserted = $this->model->insertLabels($_POST);
         if($inserted)

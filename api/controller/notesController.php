@@ -10,8 +10,6 @@ class NotesController {
 	    $this->model = new NotesModel();
 	    header('Access-Control-Allow-Origin: *'); 
 	    header('Access-Control-Allow-Headers: *');
-	    $postdata = file_get_contents("php://input");
-	    $_POST = (array)json_decode($postdata);
 	}
   
   public function get(){
@@ -30,18 +28,35 @@ class NotesController {
   }
   
   public function post(){
-    if(isset($_POST['title']) && !empty($_POST['name'])
-       && isset($_POST['description']) && !empty($_POST['description'])
-       && isset($_POST['archive']) && !empty($_POST['archive'])
-       //&& isset($_POST['image']) && !empty($_POST['image'])
-       && isset($_POST['time']) && !empty($_POST['time'])
-       && isset($_POST['reminder']) && !empty($_POST['reminder'])
-       ){
-        
-        $inserted = $this->model->insertNotes($_POST);
+    $params = array();
+		$params['title'] = isset($_POST['title']) ? $_POST['title'] : '';
+		$params['description'] = isset($_POST['description']) ? $_POST['description'] : '';
+		$params['archive'] = isset($_POST['archive']) ? $_POST['archive'] : '';
+		$params['image'] = isset($_POST['image']) ? $_POST['image'] : '';
+		$params['color'] = isset($_POST['color']) ? $_POST['color'] : '';
+		$params['time'] = isset($_POST['time']) ? $_POST['time'] : '';
+		$params['reminder'] = isset($_POST['reminder']) ? $_POST['reminder'] : '';
+    $params['checklist'] = isset($_POST['checklist']) ? json_encode($_POST['checklist']) : '';
+		$params['labels'] = isset($_POST['labels']) ? implode(',',$_POST['labels']) : '';
+        $inserted = $this->model->insertNotes($params);
         if($inserted)
         {
           $response['data'] = $inserted;
+          $response['status'] = 200;
+          return $response;
+        }else{
+          $response['status'] = 201;
+          return $response;
+        }
+    
+  }
+  
+  
+  function delete(){
+    if(isset($_POST['id']) && !empty($_POST['id'])){
+        $deleted = $this->model->deleteNotes($_POST);
+        if($deleted){
+          $response['data'] = $deleted;
           $response['status'] = 200;
           return $response;
         }else{

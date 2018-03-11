@@ -42,7 +42,8 @@
                   ng-click="vm.filterChange(label)">
                 {{label.name}}
             </span>
-            <span flex editable-text="label.name" e-form="editLabelForm" ng-show="editLabelForm.$visible">
+            <span flex editable-text="label.name" onaftersave="vm.editLabel(label.id, label.name, label.color)"
+                  e-form="editLabelForm" ng-show="editLabelForm.$visible">
                 {{label.name}}
             </span>
             <md-button class="md-icon-button" ng-hide="editLabelForm.$visible" ng-click="editLabelForm.$show()"

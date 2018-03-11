@@ -20,10 +20,11 @@
         .controller('ContactDialogController', ContactDialogController);
 
     /** @ngInject */
-    function ContactDialogController($mdDialog, Contact,$http, Contacts, User, msUtils)
+    function ContactDialogController($mdDialog, Contact,$http, Contacts, User, msUtils, environment)
     {
         var vm = this;
-
+        
+    
         // Data
         vm.title = 'Edit Contact';
         vm.contact = angular.copy(Contact);
@@ -104,8 +105,8 @@
 					'Content-Type': 'application/x-www-form-urlencoded;charset=utf-8;'
 				}
 			}
-
-			$http.post('http://localhost/websites/osteen/newfuse/webservices/index.php?action=insertcontact', data, config)
+      
+			$http.post(environment.server+'/api/contact?method=post', data, config)
 			.success(function (data, status, headers, config) {
 				
 				
@@ -147,7 +148,7 @@
 						$http(
 							{
 							   method: 'POST',
-							   url: 'http://localhost/websites/osteen/newfuse/webservices/index.php?action=updatecontact',  /*You URL to post*/
+							   url: environment.server+'/api/contact?method=update',  /*You URL to post*/
 							   data: datac,  /*You data object/class to post*/
 							   headers : {
 									'Content-Type': 'application/x-www-form-urlencoded;charset=utf-8'

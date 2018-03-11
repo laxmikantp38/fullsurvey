@@ -58,7 +58,7 @@ class NotesModel {
   
   function insertNotes($params){
     
-$query = "INSERT INTO `notes` (`title`, `description`, `archive`, `image`, `color`, `time`, `reminder`, `checklist`, `labels`, `createdDate`)
+    $query = "INSERT INTO `notes` (`title`, `description`, `archive`, `image`, `color`, `time`, `reminder`, `checklist`, `labels`, `createdDate`)
         VALUES ('".$this->db->real_escape_string($params['title'])."','".$this->db->real_escape_string($params['description'])."',
 		'".$this->db->real_escape_string($params['archive'])."','".$this->db->real_escape_string($params['image'])."',
 		'".$this->db->real_escape_string($params['color'])."','".$this->db->real_escape_string($params['time'])."',
@@ -67,6 +67,13 @@ $query = "INSERT INTO `notes` (`title`, `description`, `archive`, `image`, `colo
 		
 		$insert = $this->db->query($query);
     return $insert;    
+  }
+  
+  
+    function deleteNotes($params){
+      $query = "DELETE FROM  `notes` WHERE `id`=".$this->db->real_escape_string($params['id']);
+      $delete = $this->db->query($query);
+      return $delete;    
   }
   
 }

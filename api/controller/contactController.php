@@ -1,5 +1,6 @@
 <?php
 include_once("model/contactModel.php");
+include_once("helper/common.php");
 session_start();
 
 class ContactController {
@@ -8,10 +9,9 @@ class ContactController {
 	public function __construct()  
 	{  
 	    $this->model = new ContactModel();
+      $this->common = new Common();
 	    header('Access-Control-Allow-Origin: *'); 
 	    header('Access-Control-Allow-Headers: *');
-	    $postdata = file_get_contents("php://input");
-	    $_POST = (array)json_decode($postdata);
 	}
   
   public function get(){
@@ -30,11 +30,11 @@ class ContactController {
   }
   
   public function post(){
-    
+
     if(isset($_POST['name']) && !empty($_POST['name'])){        
         if(isset($_POST['avatar']) && !empty(isset($_POST['avatar'])) && strpos($_POST['avatar'], 'base64')){
             $fileUploadPath = IMAGE_PATH.'/'.CONTACT_IMAGE_PATH;
-            $fileUploadRes	= $fileUpload->upload($fileUploadPath, $_POST['avatar']);
+            $fileUploadRes	= $this->common->fileUpload($fileUploadPath, $_POST['avatar']);
             if(isset($fileUploadRes) && !empty($fileUploadRes)){
               $_POST['avatar'] = $fileUploadRes;  
             }else{
@@ -64,7 +64,7 @@ class ContactController {
         
         if(isset($_POST['avatar']) && !empty(isset($_POST['avatar'])) && strpos($_POST['avatar'], 'base64')){
             $fileUploadPath = IMAGE_PATH.'/'.CONTACT_IMAGE_PATH;
-            $fileUploadRes	= $fileUpload->upload($fileUploadPath, $_POST['avatar']);
+            $fileUploadRes	= $this->common->fileUpload($fileUploadPath, $_POST['avatar']);
             if(isset($fileUploadRes) && !empty($fileUploadRes)){
               $_POST['avatar'] = $fileUploadRes;  
             }else{

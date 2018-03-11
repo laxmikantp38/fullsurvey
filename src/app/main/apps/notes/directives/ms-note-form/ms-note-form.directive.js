@@ -8,7 +8,7 @@
         .directive('msNoteForm', msNoteFormDirective);
 
     /** @ngInject */
-    function msNoteFormController($scope, NotesService, msUtils,$http, $mdDialog, $timeout, LabelsService)
+    function msNoteFormController($scope, NotesService, msUtils,$http, $mdDialog, $timeout, LabelsService, environment)
     {
         var MsNoteForm = this;
         var notes = NotesService.data;
@@ -32,6 +32,7 @@
         MsNoteForm.newCheckListItem = '';
         MsNoteForm.checkListForm = false;
         MsNoteForm.labels = LabelsService.data;
+        console.log('MsNoteForm', MsNoteForm);
 
         MsNoteForm.ngFlowOptions = {
             singleFile: true
@@ -145,21 +146,20 @@
 			MsNoteForm.note = angular.copy(MsNoteForm.defaultNote);
 			$scope.$emit('MsNewNote:close');
 			
+      console.log('MsNoteForm', MsNoteForm, data);
 			
 		
-			var config = {
-				headers : {
-					'Content-Type': 'application/x-www-form-urlencoded;charset=utf-8;'
-				}
-			}
-
-			$http.post('http://localhost/websites/osteen/newfuse/webservices/index.php?action=insertnotes', data, config)
-			.success(function (data, status, headers, config) {
-				
-				
-			})
-			.error(function (data, status, header, config) {
-			});
+        var config = {
+          headers : {
+            'Content-Type': 'application/x-www-form-urlencoded;charset=utf-8;'
+          }
+        }
+  
+        $http.post(environment.server+'/api/notes?method=post', data, config).then(function(response){
+                var responseData = response.data;
+                console.log('responseData', responseData);
+                
+          });
             
             
         }
@@ -232,6 +232,19 @@
             $mdDialog.show(confirm).then(function ()
             {
                 NotesService.deleteNote(MsNoteForm.note);
+                var data = $.param({
+                  id: MsNoteForm.note.id
+                  });
+                
+                  var config = {
+                    headers : {
+                      'Content-Type': 'application/x-www-form-urlencoded;charset=utf-8;'
+                    }
+                  }
+          
+                  $http.post(environment.server+'/api/notes?method=delete', data, config).then(function(){
+                      
+                    })
             });
         }
 

@@ -11,7 +11,7 @@
     {
         return function (items, parameter, ids)
         {
-            if ( items.length === 0 || !ids || ids.length === 0 )
+            if (items && items.length === 0 || !ids || ids.length === 0 )
             {
                 return items;
             }

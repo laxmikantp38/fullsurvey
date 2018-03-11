@@ -7,13 +7,12 @@
         .controller('NotesController', NotesController);
 
     /** @ngInject */
-    function NotesController($document, $timeout, $scope,$http, $mdSidenav, NotesService, LabelsService, $mdDialog)
+    function NotesController($document, $timeout, $scope,$http, $mdSidenav, NotesService, LabelsService, $mdDialog, environment)
     {
         var vm = this;
 
         // Data
-        vm.notes = NotesService.data;
-        vm.labels = LabelsService.data;
+        
         vm.search = '';
         vm.searchToolbar = false;
         vm.filters = {
@@ -31,7 +30,32 @@
         vm.toggleSidenav = toggleSidenav;
         //vm.addNewLabel = LabelsService.addLabel;
         vm.addNewLabel = addNewLabel;
+        vm.editLabel = editLabel;
 		
+    
+    function getNotes(){    
+          $http.get(environment.server+'/api/notes?method=get').then(function(response){
+            var responseData = response.data;
+              if(responseData.status == 200){
+                vm.notes = responseData.data;
+                //vm.labels = LabelsService.data;
+              }
+          }, function(error){
+            
+          });
+    }
+    function getLabel(){    
+          $http.get(environment.server+'/api/label?method=get').then(function(response){
+            var responseData = response.data;
+              if(responseData.status == 200){
+                vm.labels = responseData.data;
+              }
+          }, function(error){
+            
+          });
+    }
+    getNotes();
+    getLabel();
 		
         //////////
 		
@@ -49,20 +73,37 @@
 				headers : {
 					'Content-Type': 'application/x-www-form-urlencoded;charset=utf-8;'
 				}
-			}
+			};
 
-			$http.post('http://localhost/websites/osteen/newfuse/webservices/index.php?action=insertlabel', data, config)
-			.success(function (data, status, headers, config) {
-				
-				alert( "success message: " + JSON.stringify(data));
-			})
-			.error(function (data, status, header, config) { alert( "failure message: " + JSON.stringify(data));
-				/* $scope.ResponseDetails = "Data: " + data +
-					"<hr />status: " + status +
-					"<hr />headers: " + header +
-					"<hr />config: " + config; */
+          $http.post(environment.server+'/api/label?method=post', data, config).then(function(response){
+              var responseData = response.data;
+              console.log('responseData', responseData);
+              getLabel();
+          });
+      }
+      
+      function editLabel(labelId, updatedLabel, color){
+        
+            LabelsService.updateLabel(updatedLabel);
+			// use $.param jQuery function to serialize data from JSON 
+			var data = $.param({
+        id: labelId,
+				name: updatedLabel,
+        color: color
 			});
-        }
+		
+			var config = {
+				headers : {
+					'Content-Type': 'application/x-www-form-urlencoded;charset=utf-8;'
+				}
+			};
+
+          $http.post(environment.server+'/api/label?method=update', data, config).then(function(response){
+              var responseData = response.data;
+              console.log('responseData', responseData);
+              getLabel();
+          });
+      }
 
         /**
          * Change Notes Filter
@@ -135,33 +176,26 @@
                 .targetEvent(ev)
                 .ok('OK')
                 .cancel('CANCEL');
-
             $mdDialog.show(confirm).then(function ()
             {
+              
                 LabelsService.deleteLabel(label);
 				
-				var data = $.param({
-				id: label.id
-				});
-			
-				var config = {
-					headers : {
-						'Content-Type': 'application/x-www-form-urlencoded;charset=utf-8;'
-					}
-				}
-
-				$http.post('http://localhost/websites/osteen/newfuse/webservices/index.php?action=deletelabel', data, config)
-				.success(function (data, status, headers, config) {
-					
-					//alert( "success message: " + JSON.stringify(data));
-				})
-				.error(function (data, status, header, config) { //alert( "failure message: " + JSON.stringify(data));
-					/* $scope.ResponseDetails = "Data: " + data +
-						"<hr />status: " + status +
-						"<hr />headers: " + header +
-						"<hr />config: " + config; */
-				});
-            });
+          var data = $.param({
+          id: label.id
+          });
+        
+          var config = {
+            headers : {
+              'Content-Type': 'application/x-www-form-urlencoded;charset=utf-8;'
+            }
+          }
+  
+          $http.post(environment.server+'/api/label?method=delete', data, config).then(function(){
+              getLabel();
+            })
+          
+          });
         }
 
         /**

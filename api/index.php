@@ -16,8 +16,6 @@ require_once('helper/response.php');
 
 $response = new Response();
 
-define('BASEURL', 'http://localhost:3001');
-
 	$link = $_SERVER['PHP_SELF'];
   $link_array = explode('/',$link);
   $controllerSlug = end($link_array);
@@ -29,10 +27,9 @@ define('BASEURL', 'http://localhost:3001');
   
   $controller = new $requestedControllerName();
   
-	$requestmethod = (isset($_REQUEST['requestmethod']) && !empty($_REQUEST['requestmethod'])) ? $_REQUEST['requestmethod'] : '';
+	$requestmethod = (isset($_REQUEST['method']) && !empty($_REQUEST['method'])) ? $_REQUEST['method'] : '';
 	$requestService = strtolower(trim(str_replace("/","",$requestmethod)));
- //$postdata = file_get_contents("php://input");
- //   $request = json_decode($postdata);
+ 
 	
 	if(isset($requestService) && !empty($requestService))
 	{

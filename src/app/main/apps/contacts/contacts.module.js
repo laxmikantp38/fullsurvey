@@ -26,11 +26,11 @@
             resolve: {
                 Contacts: function (msApi)
                 {
-                    return msApi.resolve('contacts.contacts@get');
+                    //return msApi.resolve('contacts.contacts@get');
                 },
                 User: function (msApi)
                 {
-                    return msApi.resolve('contacts.user@get');
+                    //return msApi.resolve('contacts.user@get');
                 }
             }
         });
@@ -41,7 +41,7 @@
         // Api
        // msApiProvider.register('contacts.contacts', ['app/data/contacts/contacts.json']);
 		
-		msApiProvider.register('contacts.contacts', ['http://localhost/websites/osteen/newfuse/webservices/index.php?action=getcontacts']);
+        //msApiProvider.register('contacts.contacts', [environment.server+'/api/contact?method=get']);
 		 
         msApiProvider.register('contacts.user', ['app/data/contacts/user.json']);
 

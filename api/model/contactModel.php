@@ -34,9 +34,9 @@ class ContactModel {
 		while ($row = $result->fetch_assoc())
 		{
 			if(!isset($row['avatar']) || empty($row['avatar'])){
-				$row['avatar'] = BASE_URL.IMAGE_URL.'profile.jpg';
+				$row['avatar'] = BASE_URL.'/'.IMAGE_PATH.'/'.'profile.jpg';
 			}
-			$row['avatar'] = BASE_URL.IMAGE_PATH.'/'.CONTACT_IMAGE_PATH.$row['avatar'];
+			$row['avatar'] = BASE_URL.'/'.IMAGE_PATH.'/'.CONTACT_IMAGE_PATH.$row['avatar'];
 			$list[] = $row;
 		}
 		return $list;
@@ -60,11 +60,11 @@ class ContactModel {
     forEach($params as $key=>$data){
       if(isset($data) && !empty($data) && $key != 'id'){
         $value = $this->db->real_escape_string($data);
-        $paramsArr[] = "$key = $value";  
+        $paramsArr[] = "$key = '$value'";  
       }      
     }
     $paramsSqlArray = implode(', ', $paramsArr);    
-    $query = sprintf("UPDATE %s SET %s WHERE id='%s'", '`contacts`', $paramsSqlArray, $params['id']);    
+    $query = sprintf("UPDATE %s SET %s WHERE id='%s'", '`contacts`', $paramsSqlArray, $params['id']);
 		$update = $this->db->query($query);
     return $update;
   }

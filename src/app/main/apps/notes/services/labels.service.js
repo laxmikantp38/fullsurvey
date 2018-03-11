@@ -7,7 +7,7 @@
         .factory('LabelsService', LabelsService);
 
     /** @ngInject */
-    function LabelsService(msUtils, NotesService, msApi, $q)
+    function LabelsService(msUtils, NotesService, msApi, $q, $http, environment)
     {
         var service = {
             data       : [],
@@ -87,24 +87,19 @@
             // Create a new deferred object
             var deferred = $q.defer();
 
-            msApi.request('notes.labels@get', {},
-                // SUCCESS
-                function (response)
-                {
-                    // Attach the data
-                    service.data = response.data;
+            $http.get(environment.server+'/api/label?method=get').then(function(response){
+              var responseData = response.data;
+                if(responseData.status == 200){
+                  // Attach the data
+                    service.data = responseData.data;
 
                     // Resolve the promise
-                    deferred.resolve(response);
-                },
-
-                // ERROR
-                function (response)
-                {
-                    // Reject the promise
-                    deferred.reject(response);
+                    deferred.resolve(responseData.data);
+                  //vm.labels = LabelsService.data;
                 }
-            );
+            }, function(error){
+              
+            });
 
             return deferred.promise;
         }

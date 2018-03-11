@@ -40,11 +40,19 @@ class LabelModel {
   }
   
   function updateLabels($params){
-    $query = "UPDATE  `labels` SET `name`='".$this->db->real_escape_string($params['name'])."',`color`='".$this->db->real_escape_string($params['color'])."'
-         WHERE `id`=".$this->db->real_escape_string($params['id']);
-		
-      $update = $this->db->query($query);
-      return $update;
+    
+    $paramsArr = array();
+    forEach($params as $key=>$data){
+      if(isset($data) && !empty($data) && $key != 'id'){
+        $value = $this->db->real_escape_string($data);
+        $paramsArr[] = "$key = '$value'";  
+      }      
+    }
+    $paramsSqlArray = implode(', ', $paramsArr);    
+    $query = sprintf("UPDATE %s SET %s WHERE id='%s'", '`labels`', $paramsSqlArray, $params['id']);
+		$update = $this->db->query($query);
+    return $update;
+    
   }
   
   function deleteLabels($params){

@@ -9,14 +9,13 @@
         
 
     /** @ngInject */
-    function ContactsController($scope, $mdSidenav, Contacts, User, msUtils, msApi, $mdDialog, $document)
+    function ContactsController($scope, $mdSidenav, Contacts, User, msUtils, $http, $mdDialog, $document, environment)
     {
 
         var vm = this;
 
         // Data
-        vm.contacts = Contacts.data;
-        vm.user = User.data;
+        
         vm.filterIds = null;
         vm.listType = 'all';
         vm.listOrder = 'name';
@@ -41,19 +40,18 @@
         vm.exists = msUtils.exists;
         
         
-        msApi.request('getcontacts@get', {id: 1},
-  
-          // SUCCESS
-          function (response) {
-              console.log(response.data)
-          },
-  
-          // ERROR
-          function (response) {
-              console.error(response.data)
-          }
-      );
-		
+        $http.get(environment.server+'/api/contact?method=get').then(function(response){
+          var responseData = response.data;
+            if(responseData.status == 200){
+              vm.contacts = responseData.data;
+            }
+        }, function(error){
+          
+        });
+      
+        
+        
+        
 
         //////////
 

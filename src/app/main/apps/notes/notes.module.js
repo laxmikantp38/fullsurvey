@@ -34,9 +34,9 @@
 
         // Api
        // msApiProvider.register('notes.notes', ['app/data/notes/notes.json']);
-		 msApiProvider.register('notes.notes', ['http://localhost/websites/osteen/newfuse/webservices/index.php?action=getnotes']);
+      //msApiProvider.register('notes.notes', ['http://localhost/websites/osteen/newfuse/webservices/index.php?action=getnotes']);
         //msApiProvider.register('notes.labels', ['app/data/notes/labels.json']);
-        msApiProvider.register('notes.labels', ['http://localhost/websites/osteen/newfuse/webservices/index.php?action=getlabels']);
+        //msApiProvider.register('notes.labels', ['http://localhost/websites/osteen/newfuse/webservices/index.php?action=getlabels']);
         // Navigation
         msNavigationServiceProvider.saveItem('apps.notes', {
             title : 'Notes',
