@@ -76,6 +76,22 @@ class NotesModel {
       return $delete;    
   }
   
+
+   function updateNotes($params){
+    
+    $paramsArr = array();
+    forEach($params as $key=>$data){
+      if(isset($data) && !empty($data) && $key != 'id'){
+        $value = $this->db->real_escape_string($data);
+        $paramsArr[] = "$key = '$value'";  
+      }      
+    }
+    $paramsSqlArray = implode(', ', $paramsArr);    
+    $query = sprintf("UPDATE %s SET %s WHERE id='%s'", '`notes`', $paramsSqlArray, $params['id']);
+		$update = $this->db->query($query);
+    return $update;
+    
+  }
 }
 
 ?>
