@@ -21,7 +21,7 @@ $response = new Response();
   $controllerSlug = end($link_array);
 
   $requestedControllerName= $controllerSlug.'Controller';
-  if(file_exists($requestedControllerName.'.php')){
+  // if(file_exists($requestedControllerName.'.php')){
       include_once("controller/".$requestedControllerName.".php");
 
       $controller = new $requestedControllerName();
@@ -52,9 +52,9 @@ $response = new Response();
     	}else{
     		echo json_encode(array('status'=>500, 'msg'=>'Invalid  request !'));
     	}
-    }else{
-      echo json_encode(array('status'=>500, 'msg'=>'Invalid  request !'));
-    }
+    // }else{
+    //   echo json_encode(array('status'=>500, 'msg'=>'Invalid  request !'));
+    // }
 
 
 

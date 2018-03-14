@@ -2,7 +2,7 @@
     'use strict';
     angular.module('app.notes').controller('NotesController', NotesController);
     /** @ngInject */
-    function NotesController($document, $timeout, $scope, $http, $mdSidenav, NotesService, LabelsService, $mdDialog, environment) {
+    function NotesController($document, $timeout,$rootScope, $scope, $http, $mdSidenav, NotesService, LabelsService, $mdDialog, environment) {
         var vm = this;
         // Data
         vm.search = '';
@@ -43,6 +43,10 @@
         }
         getNotes();
         getLabel();
+        $rootScope.$on('refreshNotes', function (event, args) {
+            console.log("refreshNOTES");
+            getNotes();
+            });
         //////////
         function addNewLabel(newLabel) {
             LabelsService.addLabel(newLabel);

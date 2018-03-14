@@ -2,7 +2,7 @@
     'use strict';
     angular.module('app.notes').controller('msNoteFormController', msNoteFormController).directive('msNoteForm', msNoteFormDirective);
     /** @ngInject */
-    function msNoteFormController($scope, NotesService, msUtils, $http, $mdDialog, $timeout, LabelsService, environment) {
+    function msNoteFormController($rootScope,$scope, NotesService, msUtils, $http, $mdDialog, $timeout, LabelsService, environment) {
         var MsNoteForm = this;
         var notes = NotesService.data;
         //Data
@@ -118,6 +118,7 @@
             $http.post(environment.server + '/api/notes?method=post', data, config).then(function(response) {
                 var responseData = response.data;
                 console.log('responseData', responseData);
+                $rootScope.$broadcast('refreshNotes',{refresh:true});
             });
         }
         /**
@@ -146,7 +147,9 @@
             $http.post(environment.server + '/api/notes?method=update', data, config).then(function(response) {
                 var responseData = response.data;
                 console.log('responseData', responseData);
+                $rootScope.$broadcast('refreshNotes',{refresh:true});
                 console.log("update response", response);
+                
                 $mdDialog.hide();
             });
             // Hide the dialog
@@ -195,6 +198,7 @@
                 }
                 $http.post(environment.server + '/api/notes?method=delete', data, config).then(function(response) {
                     console.log("delete response", response);
+                    $rootScope.$broadcast('refreshNotes',{refresh:true});
                     $mdDialog.hide();
                 })
             });

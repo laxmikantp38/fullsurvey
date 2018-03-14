@@ -68,7 +68,13 @@ class ContactModel {
 		$update = $this->db->query($query);
     return $update;
   }
-  
+	
+	
+	function deleteContacts($params){
+		$query = "DELETE FROM  `contacts` WHERE `id`=".$this->db->real_escape_string($params['id']);
+		$delete = $this->db->query($query);
+		return $delete;    
+}
 }
 
 ?>

@@ -126,9 +126,9 @@
 
             $mdDialog.show(confirm).then(function ()
             {
-
+                console.log("delete contact",contact);
                 deleteContact(contact);
-                vm.selectedContacts = [];
+                
 
             }, function ()
             {
@@ -141,7 +141,20 @@
          */
         function deleteContact(contact)
         {
-            vm.contacts.splice(vm.contacts.indexOf(contact), 1);
+            var data = $.param({
+                id: contact.id
+            });
+            var config = {
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded;charset=utf-8;'
+                }
+            }
+            $http.post(environment.server + '/api/contact?method=delete', data, config).then(function(response) {
+                console.log("delete response", response);
+                vm.contacts.splice(vm.contacts.indexOf(contact), 1);  
+                vm.selectedContacts = [];  
+            })
+            
         }
 
         /**

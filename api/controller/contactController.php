@@ -87,7 +87,23 @@ class ContactController {
       return $response;
     }
   }
-  
+   
+  public function delete(){
+    if(isset($_POST['id']) && !empty($_POST['id'])){
+        $deleted = $this->model->deleteContacts($_POST);
+        if($deleted){
+          $response['data'] = $deleted;
+          $response['status'] = 200;
+          return $response;
+        }else{
+          $response['status'] = 201;
+          return $response;
+        }
+    }else{
+      $response['status'] = 202;
+      return $response;
+    }
+  }
 
 	
 	
