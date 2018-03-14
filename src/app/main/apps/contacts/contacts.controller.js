@@ -15,7 +15,7 @@
         var vm = this;
 
         // Data
-        
+        vm.user = User.data;
         vm.filterIds = null;
         vm.listType = 'all';
         vm.listOrder = 'name';

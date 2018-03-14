@@ -7,13 +7,15 @@
         .controller('TodoController', TodoController);
 
     /** @ngInject */
-    function TodoController($document, $mdDialog, $mdSidenav, Tasks, Tags)
+    function TodoController($document, $timeout, $mdDialog, $scope,$http, $mdSidenav, Tasks, Tags, TodosService, environment)
     {
         var vm = this;
 
         // Data
-        vm.tasks = Tasks.data;
-        vm.tags = Tags.data;
+        //vm.tasks = Tasks.data;	  
+	   getTodos();
+	   getTag();
+        //vm.tags = Tags.data;
         vm.completed = [];
         vm.colors = ['blue', 'blue-grey', 'orange', 'pink', 'purple'];
         vm.projects = {
@@ -59,6 +61,9 @@
         vm.preventDefault = preventDefault;
         vm.openTaskDialog = openTaskDialog;
         vm.toggleCompleted = toggleCompleted;
+		vm.toggleImportant = toggleImportant;
+		vm.toggleStarred = toggleStarred;	
+		
         vm.toggleSidenav = toggleSidenav;
         vm.toggleFilter = toggleFilter;
         vm.toggleFilterWithEmpty = toggleFilterWithEmpty;
@@ -69,6 +74,30 @@
         vm.isTagFilterExists = isTagFilterExists;
 
         init();
+		
+		
+		function getTodos(){    
+          $http.get(environment.server+'/api/todos?method=get').then(function(response){
+            var responseData = response.data;
+              if(responseData.status == 200){
+                vm.tasks = responseData.data;
+                //vm.labels = LabelsService.data;
+              }
+          }, function(error){
+            
+          });
+      }
+	  
+	  function getTag(){    
+          $http.get(environment.server+'/api/tag?method=get').then(function(response){
+            var responseData = response.data;
+              if(responseData.status == 200){
+                vm.tags = responseData.data;
+              }
+          }, function(error){
+            
+          });
+    }
 
         //////////
 
@@ -81,14 +110,14 @@
             {
                 if ( task.startDate )
                 {
-                    task.startDate = new Date(task.startDate);
-                    task.startDateTimestamp = task.startDate.getTime();
+                    //task.startDate = new Date(task.startDate);
+                    //task.startDateTimestamp = task.startDate.getTime();
                 }
 
                 if ( task.dueDate )
                 {
-                    task.dueDate = new Date(task.dueDate);
-                    task.dueDateTimestamp = task.dueDate.getTime();
+                   // task.dueDate = new Date(task.dueDate);
+                   // task.dueDateTimestamp = task.dueDate.getTime();
                 }
             });
         }
@@ -103,6 +132,7 @@
             e.preventDefault();
             e.stopPropagation();
         }
+		
 
         /**
          * Open new task dialog
@@ -137,6 +167,61 @@
         {
             event.stopPropagation();
             task.completed = !task.completed;
+			
+			   var data = $.param({id:task.id,completed:task.completed});
+		
+						var config = {
+							headers : {
+								'Content-Type': 'application/x-www-form-urlencoded;charset=utf-8;'
+							}
+						};
+
+					  $http.post(environment.server+'/api/todos?method=completed', data, config).then(function(response){
+						  var responseData = response.data;
+						  console.log('responseData', responseData);
+						  //getTodos();
+					  }); 
+        }
+		
+		
+		function toggleImportant(task, event)
+        {
+            event.stopPropagation();
+            task.important = !task.important;
+			
+			   var data = $.param({id:task.id,important:task.important});
+		
+						var config = {
+							headers : {
+								'Content-Type': 'application/x-www-form-urlencoded;charset=utf-8;'
+							}
+						};
+
+					  $http.post(environment.server+'/api/todos?method=important', data, config).then(function(response){
+						  var responseData = response.data;
+						  console.log('responseData', responseData);
+						  //getTodos();
+					  }); 
+        }
+		
+		function toggleStarred(task, event)
+        {
+            event.stopPropagation();
+            task.starred = !task.starred;
+			
+			   var data = $.param({id:task.id,starred:task.starred});
+		
+						var config = {
+							headers : {
+								'Content-Type': 'application/x-www-form-urlencoded;charset=utf-8;'
+							}
+						};
+
+					  $http.post(environment.server+'/api/todos?method=starred', data, config).then(function(response){
+						  var responseData = response.data;
+						  console.log('responseData', responseData);
+						  //getTodos();
+					  }); 
         }
 
         /**

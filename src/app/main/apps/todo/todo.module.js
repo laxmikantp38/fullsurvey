@@ -25,13 +25,15 @@
                 }
             },
             resolve  : {
-                Tasks: function (msApi)
+                Tasks: function (TodosService)
                 {
-                    return msApi.resolve('todo.tasks@get');
+                   // return msApi.resolve('todo.tasks@get');
+					return TodosService.getData();
                 },
-                Tags : function (msApi)
+                Tags : function (TodosService)
                 {
-                    return msApi.resolve('todo.tags@get');
+                    //return msApi.resolve('todo.tags@get');
+					return TodosService.getTagData();
                 }
             },
             bodyClass: 'todo'
@@ -41,8 +43,8 @@
         $translatePartialLoaderProvider.addPart('app/main/apps/todo');
 
         // Api
-        msApiProvider.register('todo.tasks', ['app/data/todo/tasks.json']);
-        msApiProvider.register('todo.tags', ['app/data/todo/tags.json']);
+        //msApiProvider.register('todo.tasks', [environment.server+'/api/notes?method=get']);
+        //msApiProvider.register('todo.tags', ['app/data/todo/tags.json']);
 
         // Navigation
         msNavigationServiceProvider.saveItem('apps.to-do', {

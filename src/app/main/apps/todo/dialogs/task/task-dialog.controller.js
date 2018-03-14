@@ -7,14 +7,15 @@
         .controller('TaskDialogController', TaskDialogController);
 
     /** @ngInject */
-    function TaskDialogController($mdDialog, Task, Tasks, event)
+    function TaskDialogController($mdDialog, Task, Tasks, event, environment, TodosService, $timeout, $scope,$http)
     {
         var vm = this;
 
         // Data
         vm.title = 'Edit Task';
         vm.task = angular.copy(Task);
-        vm.tasks = Tasks;
+        //vm.tasks = Tasks;	  
+	   getTodos();
         vm.newTask = false;
 
         if ( !vm.task )
@@ -44,6 +45,19 @@
         vm.deleteTask = deleteTask;
         vm.newTag = newTag;
         vm.closeDialog = closeDialog;
+		
+		
+		function getTodos(){    
+          $http.get(environment.server+'/api/todos?method=get').then(function(response){
+            var responseData = response.data;
+              if(responseData.status == 200){
+                vm.tasks = responseData.data;
+                //vm.labels = LabelsService.data;
+              }
+          }, function(error){
+            
+          });
+      }
 
         //////////
 
@@ -53,6 +67,22 @@
         function addNewTask()
         {
             vm.tasks.unshift(vm.task);
+			
+			console.log(vm.task);
+			
+			var data = $.param(vm.task);
+		
+			var config = {
+				headers : {
+					'Content-Type': 'application/x-www-form-urlencoded;charset=utf-8;'
+				}
+			};
+
+          $http.post(environment.server+'/api/todos?method=post', data, config).then(function(response){
+             // var responseData = response.data;
+             // console.log('responseData', responseData);
+             getTodos();
+          });
 
             closeDialog();
         }
@@ -68,6 +98,22 @@
                 if ( vm.tasks[i].id === vm.task.id )
                 {
                     vm.tasks[i] = angular.copy(vm.task);
+					
+					var data = $.param(angular.copy(vm.task));
+		
+						var config = {
+							headers : {
+								'Content-Type': 'application/x-www-form-urlencoded;charset=utf-8;'
+							}
+						};
+
+					  $http.post(environment.server+'/api/todos?method=update', data, config).then(function(response){
+						  //var responseData = response.data;
+						  //console.log('responseData', responseData);
+						  getTodos();
+					  });
+					  
+					  
                     break;
                 }
             }
@@ -96,6 +142,22 @@
                     if ( vm.tasks[i].id === vm.task.id )
                     {
                         vm.tasks[i].deleted = true;
+						
+						var data = $.param({id:vm.tasks[i].id});
+		
+						var config = {
+							headers : {
+								'Content-Type': 'application/x-www-form-urlencoded;charset=utf-8;'
+							}
+						};
+
+					  $http.post(environment.server+'/api/todos?method=delete', data, config).then(function(response){
+						  //var responseData = response.data;
+						  //console.log('responseData', responseData);
+						  getTodos();
+					  });
+		  
+		  
                         break;
                     }
                 }

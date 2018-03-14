@@ -30,7 +30,7 @@
                 },
                 User: function (msApi)
                 {
-                    //return msApi.resolve('contacts.user@get');
+                    return msApi.resolve('contacts.user@get');
                 }
             }
         });
